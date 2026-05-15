@@ -1,0 +1,8 @@
+pytesseract
+opencv-python
+ultralytics
+pyttsx3
+Pillow
+Flask
+werkzeug
+gTTS

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Analyzer & Synthesizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <main class="container glass-panel">
+        <header>
+            <h1 class="gradient-text">AI Analyzer</h1>
+            <p>Upload an image for insights or input text to synthesize speech.</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-target="image-tab">Image Analysis</button>
+            <button class="tab-btn" data-target="text-tab">Text to Speech</button>
+        </div>
+
+        <!-- Image Analysis Tab -->
+        <section id="image-tab" class="tab-content active">
+            <form id="upload-form" class="upload-zone">
+                <input type="file" id="image-input" accept="image/png, image/jpeg" hidden>
+                <label for="image-input" class="upload-label" id="drop-zone">
+                    <div class="upload-icon">📸</div>
+                    <p>Click or drag image here to analyze</p>
+                    <span class="file-name" id="file-name">No file selected</span>
+                </label>
+                <button type="submit" class="btn primary-btn" id="analyze-btn" disabled>
+                    <span class="btn-text">Analyze Image</span>
+                    <div class="loader hidden"></div>
+                </button>
+            </form>
+
+            <div id="results-area" class="results-area hidden">
+                <h3>Analysis Results</h3>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h4>Detected Image</h4>
+                        <img id="result-image" src="" alt="Detection result">
+                    </div>
+                    <div class="result-card details-card">
+                        <h4>Extracted Text</h4>
+                        <div class="extracted-text" id="extracted-text"></div>
+                        
+                        <h4>Objects Found</h4>
+                        <div class="tags" id="object-tags"></div>
+
+                        <h4>Summary</h4>
+                        <p id="summary-text"></p>
+                        
+                        <div class="audio-player mt-2">
+                            <audio id="result-audio" controls></audio>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Text to Speech Tab -->
+        <section id="text-tab" class="tab-content hidden">
+            <form id="tts-form" class="tts-form">
+                <div class="input-group">
+                    <label for="tts-input">Enter text to synthesize</label>
+                    <textarea id="tts-input" rows="4" placeholder="Hello from the AI synthesizer..."></textarea>
+                </div>
+                <button type="submit" class="btn primary-btn" id="speak-btn">
+                    <span class="btn-text">Generate Audio</span>
+                    <div class="loader hidden"></div>
+                </button>
+            </form>
+            <div id="tts-result-area" class="results-area hidden">
+                <h3>Generated Speech</h3>
+                <div class="audio-player mt-2">
+                    <audio id="tts-audio" controls></audio>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
