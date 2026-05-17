@@ -20,7 +20,7 @@ exports.analyzeImage = (req, res) => {
   const outImgPath = path.join(__dirname, '..', 'outputs', outImgName);
   
   // Call the Python script
-  const pythonProcess = spawn('python', [
+  const pythonProcess = spawn('python3', [
     path.join(__dirname, '..', 'ai_runner.py'),
     '--image', imagePath,
     '--out_img_path', outImgPath
@@ -37,6 +37,13 @@ exports.analyzeImage = (req, res) => {
     stderrData += data.toString();
   });
 
+  pythonProcess.on('error', (err) => {
+    console.error('Failed to start Python process:', err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Failed to start AI processing (Python not found or crashed)' });
+    }
+  });
+
   pythonProcess.on('close', (code) => {
     if (code !== 0) {
       console.error(`Python process exited with code ${code}`);
@@ -51,11 +58,18 @@ exports.analyzeImage = (req, res) => {
         const audioName = `audio_${uniqueId}.mp3`;
         const audioPath = path.join(__dirname, '..', 'outputs', audioName);
         
-        const ttsProcess = spawn('python', [
+        const ttsProcess = spawn('python3', [
           path.join(__dirname, '..', 'tts_runner.py'),
           '--text', result.summary,
           '--out_audio_path', audioPath
         ]);
+
+        ttsProcess.on('error', (err) => {
+          console.error('Failed to start TTS process:', err);
+          if (!res.headersSent) {
+             res.status(500).json({ error: 'Failed to generate audio (TTS process failed)' });
+          }
+        });
 
         ttsProcess.on('close', (ttsCode) => {
           res.json({
@@ -87,11 +101,18 @@ exports.generateSpeech = (req, res) => {
   const audioName = `speak_${uniqueId}.mp3`;
   const audioPath = path.join(__dirname, '..', 'outputs', audioName);
 
-  const ttsProcess = spawn('python', [
+  const ttsProcess = spawn('python3', [
     path.join(__dirname, '..', 'tts_runner.py'),
     '--text', text,
     '--out_audio_path', audioPath
   ]);
+
+  ttsProcess.on('error', (err) => {
+    console.error('Failed to start TTS process:', err);
+    if (!res.headersSent) {
+       res.status(500).json({ error: 'Failed to start Text-to-Speech process' });
+    }
+  });
 
   let stdoutData = '';
 
