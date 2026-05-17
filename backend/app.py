@@ -2,15 +2,21 @@ import os
 import uuid
 # pyrefly: ignore [missing-import]
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 # pyrefly: ignore [missing-import]
 from werkzeug.utils import secure_filename
 from src.ocr import extract_text
 from src.detect import YoloDetector
 from src.tts import save_audio
+from dotenv import load_dotenv
 
-app = Flask(__name__, static_folder='static', static_url_path='')
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
-app.config['OUTPUT_FOLDER'] = 'static/outputs'
+load_dotenv()
+
+app = Flask(__name__, static_folder='outputs', static_url_path='/outputs')
+CORS(app)
+
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['OUTPUT_FOLDER'] = 'outputs'
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['OUTPUT_FOLDER'], exist_ok=True)
@@ -48,9 +54,7 @@ def build_summary(text: str, labels: list) -> str:
         summary_parts.append(f"Additionally, the text extracted from the image reads as follows: {text_short}")
         
     return " ".join(summary_parts)
-@app.route('/')
-def index():
-    return app.send_static_file('index.html')
+
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze():

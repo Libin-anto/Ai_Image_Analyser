@@ -1,3 +1,7 @@
+import './style.css';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 document.addEventListener('DOMContentLoaded', () => {
     // Tabs
     const tabBtns = document.querySelectorAll('.tab-btn');
@@ -72,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('image', imageInput.files[0]);
 
         try {
-            const res = await fetch('/api/analyze', {
+            const res = await fetch(`${API_URL}/api/analyze`, {
                 method: 'POST',
                 body: formData
             });
@@ -81,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (res.ok) {
                 // Populate results
-                resultImage.src = data.image_url;
+                resultImage.src = `${API_URL}${data.image_url}`;
                 extractedText.textContent = data.text || '(no text detected)';
                 
                 objectTags.innerHTML = '';
@@ -99,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 summaryText.textContent = data.summary;
                 
                 // Audio
-                resultAudio.src = data.audio_url + '?t=' + new Date().getTime(); // cache buster
+                resultAudio.src = `${API_URL}${data.audio_url}?t=` + new Date().getTime(); // cache buster
                 
                 resultsArea.classList.remove('hidden');
                 resultAudio.play().catch(e => console.log('Autoplay prevented:', e));
@@ -130,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ttsResultArea.classList.add('hidden');
 
         try {
-            const res = await fetch('/api/speak', {
+            const res = await fetch(`${API_URL}/api/speak`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text })
@@ -138,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await res.json();
             if (res.ok) {
-                ttsAudio.src = data.audio_url + '?t=' + new Date().getTime();
+                ttsAudio.src = `${API_URL}${data.audio_url}?t=` + new Date().getTime();
                 ttsResultArea.classList.remove('hidden');
                 ttsAudio.play().catch(e => console.log('Autoplay prevented:', e));
             } else {

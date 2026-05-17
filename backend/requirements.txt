@@ -6,3 +6,6 @@ Pillow
 Flask
 werkzeug
 gTTS
+flask-cors
+python-dotenv
+gunicorn
