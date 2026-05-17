@@ -37,7 +37,15 @@ venv/
 *.pth
 yolov8n.pt
 
+# Node.js
+node_modules/
+npm-debug.log
+
 # Application Outputs and Uploads
+backend/outputs/*
+!backend/outputs/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
 outputs/*
 !outputs/.gitkeep
 static/outputs/*
